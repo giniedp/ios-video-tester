@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Video Test</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      html {
+        font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans,
+          sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+        line-height: 1.2;
+        -webkit-text-size-adjust: 100%;
+        -webkit-tap-highlight-color: rgba(#000000, 0);
+      }
+      body {
+        font-size: 1rem;
+        font-weight: 400;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        height: 100vh; /* Dont use % here. vh includes safe-area size */
+      }
+      button {
+        font-family: inherit;
+      }
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        font-weight: bold;
+        margin: 0;
+        padding: 0;
+        line-height: 1;
+      }
+      h1 {
+        font-size: 42px;
+      }
+      h2 {
+        font-size: 32px;
+      }
+      h3 {
+        font-size: 24px;
+      }
+      h4 {
+        font-size: 20px;
+      }
+      h5 {
+        font-size: 18px;
+      }
+      h6 {
+        font-size: 1rem;
+      }
+      p {
+        margin-top: 0;
+        margin-bottom: 1rem;
+      }
+      .layout-frame {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+      }
+      .layout-column {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      .layout-row {
+        flex: 1;
+        display: flex;
+        flex-direction: row;
+        overflow: hidden;
+      }
+      .layout-content {
+        flex: 1;
+        display: block !important;
+        overflow: auto !important;
+      }
+      .container {
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      @media (min-width: 576px) {
+        .container {
+          max-width: 540px;
+        }
+      }
+      @media (min-width: 768px) {
+        .container {
+          max-width: 720px;
+        }
+      }
+      @media (min-width: 992px) {
+        .container {
+          max-width: 960px;
+        }
+      }
+      @media (min-width: 1200px) {
+        .container {
+          max-width: 1140px;
+        }
+      }
+      .container-fluid {
+        width: 100%;
+      }
+      .flex-fill {
+        flex: 1 1 auto;
+      }
+      .flex-none {
+        flex: none;
+      }
+      .text-light {
+        color: white;
+      }
+      .text-dark {
+        color: black;
+      }
+      .text-strong {
+        font-weight: bold;
+      }
+      .text-uppercase {
+        text-transform: uppercase;
+      }
+      .b04-inset-top {
+        padding-top: var(--android-safe-area-inset-top, env(safe-area-inset-top));
+      }
+      .b04-inset-bottom {
+        padding-bottom: var(--android-safe-area-inset-bottom, env(safe-area-inset-bottom));
+      }
+      .b04-background {
+        background-image: repeating-linear-gradient(
+          145deg,
+          black -300px,
+          black 200px,
+          red 201px,
+          red 768px,
+          black 769px
+        );
+        background-size: 1864px 1305px;
+      }
+      .b04-toolbar {
+        color: white;
+      }
+      .b04-toolbar-row {
+        padding: 0 1rem;
+        min-height: 3.5rem;
+      }
+      .b04-toolbar-title {
+        font-weight: bold;
+        font-size: 32px;
+        text-align: left;
+        padding-top: 0.875rem;
+        line-height: 1;
+      }
+      .b04-toolbar-title-centered {
+        font-weight: bold;
+        font-size: 24px;
+        text-align: center;
+        padding-top: 0.875rem;
+        position: absolute;
+        left: 3rem;
+        right: 3rem;
+        line-height: 1;
+      }
+      .b04-tabbar {
+        min-height: 4rem;
+      }
+      .b04-tabbar-row {
+        background-color: #000000;
+        min-height: 4rem;
+      }
+      .b04-content {
+        padding: 0 1rem;
+      }
+      .btn {
+        display: inline-block;
+        font-weight: bold;
+        text-align: center;
+        vertical-align: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+        background-color: transparent;
+        border: 1px solid transparent;
+        padding: 1rem;
+        font-size: 18px;
+        line-height: 1;
+        border-radius: 0;
+        text-transform: uppercase;
+      }
+      .btn-block {
+        display: block;
+        width: 100%;
+      }
+      .btn-primary {
+        background-color: red;
+        color: white;
+      }
+      .btn-secondary {
+        background-color: white;
+        color: black;
+      }
+      #log-container {
+        margin-top: 1rem;
+        font-family: monospace;
+        font-size: 10px;
+        word-break: keep-all;
+      }
+    </style>
+
+    <body class="layout-frame layout-column b04-background text-light">
+      <div class="flex-none b04-toolbar">
+        <div class="b04-inset-top"></div>
+        <div class="b04-toolbar-row">
+          <div class="b04-toolbar-title-centered">Video Test</div>
+        </div>
+      </div>
+      <div class="flex-fill layout-content b04-content container">
+        <button class="btn btn-block btn-secondary" onclick="toggleVideo()">Load Video</button>
+        <div id="video-container"></div>
+        <div id="log-container"></div>
+      </div>
+    </body>
+    <link href="https://avplayer-cdn.sportradar.com/dist/latest/styles.css" type="text/css" rel="stylesheet"></link>
+    <script src="https://avplayer-cdn.sportradar.com/dist/latest/avvpl-player.js" type="text/javascript"></script>
+    <script type="text/javascript">
+      const btnEl = document.querySelector('button')
+      const videoEl = document.querySelector('#video-container')
+      const logEl = document.querySelector('#log-container')
+
+      videoEl.addEventListener('enterpictureinpicture', () => logState())
+      videoEl.addEventListener('leavepictureinpicture', () => logState())
+
+      function fetch(url) {
+        return new Promise((resolve, reject) => {
+          const xhr = new XMLHttpRequest()
+          xhr.open('GET', url, true)
+          xhr.onreadystatechange = () => {
+            if (xhr.readyState !== XMLHttpRequest.DONE) {
+              return
+            }
+            if (200 <= xhr.status && xhr.status < 400) {
+              resolve(xhr)
+            } else {
+              reject(xhr)
+            }
+          }
+          xhr.send()
+        })
+      }
+
+      function delay(time) {
+        return (input) => {
+          return new Promise((resolve) => {
+            setTimeout(() => resolve(input), time)
+          })
+        }
+      }
+
+      function listPlayers() {
+        return typeof sravvplPlayerInstances !== 'undefined' ? sravvplPlayerInstances : []
+      }
+
+      function createPlayer(config) {
+        return avvpl.setupPlayer(config, avvplui)
+      }
+
+      function disposePlayer() {
+        const instance = listPlayers()[0]
+        if (instance) {
+          instance.remove()
+          listPlayers().splice(0, 1)
+        }
+      }
+
+      function hasPlayer() {
+        return listPlayers().length > 0
+      }
+
+      function clearLog() {
+        logEl.innerHTML = ''
+      }
+
+      function padLeft(str, char, len) {
+        while (str.length < len) {
+          str = `${char}${str}`
+        }
+        return str
+      }
+
+      function getDateTag() {
+        const date = new Date()
+        const hours = padLeft(date.getHours(), '0', 2)
+        const minutes = padLeft(date.getMinutes(), '0', 2)
+        const seconds = padLeft(date.getSeconds(), '0', 2)
+        return `${hours}:${minutes}:${seconds}`
+      }
+
+      function logState() {
+        const instance = listPlayers()[0]
+        if (!instance) {
+          return
+        }
+        
+        const log = [
+         `Fullsc: ${instance.isFullScreen() ? 'Y' : 'N'}`,
+         `Mute: ${instance.isMute() ? 'Y' : 'N'}`,
+         `State: ${instance.getPlayState()}`,
+        ].join(' | ')
+        const el = document.createElement('div')
+        el.textContent = `[${getDateTag()}]: ${log}` 
+        logEl.prepend(el)
+      }
+
+      function toggleVideo() {
+        if (hasPlayer()) {
+          btnEl.textContent = 'Load Video'
+          unloadVideo()
+        } else {
+          btnEl.textContent = 'Unload Video'
+          loadVideo()
+        }
+      }
+
+      function loadVideo() {
+        // const url = 'https://bayer04leverkusen.spott2.sportradar.com/api/v2/content/612991/player-setting'
+        const url = 'https://bayer04leverkusen.spott2.sportradar.com/api/v2/content/1226108/player-setting'
+        fetch(url)
+          .then((xhr) => JSON.parse(xhr.responseText))
+          .then(delay(1000))
+          .then((config) => {
+            const instance = createPlayer({
+              ...config,
+              id: 'video-container',
+              enablePip: true,
+              downloadWhilePaused: false,
+            }, avvplui)
+            const events = [
+              'fullscreenChange',
+              'mute',
+              'pause',
+              'play',
+              'playing'
+            ]
+            for (const e of events) {
+              instance.on(e, logState)
+            }
+          }) 
+      }
+
+      function unloadVideo() {
+        disposePlayer()
+        clearLog()
+      }
+    </script>
+  </head>
+</html>
