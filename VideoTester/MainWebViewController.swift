@@ -23,11 +23,11 @@ class MainWebViewController: BayerWebViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.becomeFirstResponder()
-        // loadURL(url: URL(string: "")!)
-        let path = Bundle.main.path(forResource: "video-test.html", ofType: nil)
-        if path != nil {
-            loadURL(url: URL(fileURLWithPath: path!))
-        }
+         loadURL(url: URL(string: "https://ginie.eu/video-test.html")!)
+        // let path = Bundle.main.path(forResource: "video-test.html", ofType: nil)
+        // if path != nil {
+        //     loadURL(url: URL(fileURLWithPath: path!))
+        // }
     }
         
     override func clearMemory(){
