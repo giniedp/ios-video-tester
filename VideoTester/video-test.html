@@ -215,11 +215,15 @@
         background-color: white;
         color: black;
       }
-      #log-container {
+      #log-container, #html-log-container {
         margin-top: 1rem;
         font-family: monospace;
         font-size: 10px;
         word-break: keep-all;
+      }
+
+      #html-video-container video {
+        width: 100%;
       }
     </style>
 
@@ -234,17 +238,20 @@
         <button class="btn btn-block btn-secondary" onclick="toggleVideo()">Load Video</button>
         <div id="video-container"></div>
         <div id="log-container"></div>
+
+        <button class="btn btn-block btn-secondary html5" onclick="toggleHtml5Video()">Load HTML5 Video</button>
+        <div id="html-video-container"></div>
+        <div id="html-log-container"></div>
       </div>
     </body>
     <link href="https://avplayer-cdn.sportradar.com/dist/latest/styles.css" type="text/css" rel="stylesheet"></link>
     <script src="https://avplayer-cdn.sportradar.com/dist/latest/avvpl-player.js" type="text/javascript"></script>
     <script type="text/javascript">
-      const btnEl = document.querySelector('button')
-      const videoEl = document.querySelector('#video-container')
-      const logEl = document.querySelector('#log-container')
-
-      videoEl.addEventListener('enterpictureinpicture', () => logState())
-      videoEl.addEventListener('leavepictureinpicture', () => logState())
+      const sprBtnEl = document.querySelector('button')
+      const sprVideoEl = document.querySelector('#video-container')
+      const sprLogEl = document.querySelector('#log-container')
+      sprVideoEl.addEventListener('enterpictureinpicture', () => logState())
+      sprVideoEl.addEventListener('leavepictureinpicture', () => logState())
 
       function fetch(url) {
         return new Promise((resolve, reject) => {
@@ -293,11 +300,11 @@
       }
 
       function clearLog() {
-        logEl.innerHTML = ''
+        sprLogEl.innerHTML = ''
       }
 
       function padLeft(str, char, len) {
-        while (str.length < len) {
+        while (String(str).length < len) {
           str = `${char}${str}`
         }
         return str
@@ -324,15 +331,15 @@
         ].join(' | ')
         const el = document.createElement('div')
         el.textContent = `[${getDateTag()}]: ${log}` 
-        logEl.prepend(el)
+        sprLogEl.prepend(el)
       }
 
       function toggleVideo() {
         if (hasPlayer()) {
-          btnEl.textContent = 'Load Video'
+          sprBtnEl.textContent = 'Load Video'
           unloadVideo()
         } else {
-          btnEl.textContent = 'Unload Video'
+          sprBtnEl.textContent = 'Unload Video'
           loadVideo()
         }
       }
@@ -366,6 +373,81 @@
       function unloadVideo() {
         disposePlayer()
         clearLog()
+      }
+
+    </script>
+    <script type="text/javascript">
+      const html5BtnEl = document.querySelector('button.html5')
+      const html5VideoEl = document.querySelector('#html-video-container')
+      const html5LogEl = document.querySelector('#html-log-container')
+
+      function toggleHtml5Video() {
+        if (getHtml5Video()) {
+          html5BtnEl.textContent = 'Load Video'
+          disposeHtml5Video()
+        } else {
+          html5BtnEl.textContent = 'Unload HTML5 Video'
+          setTimeout(() => createHtml5Video(), 1000)
+        }
+      }
+
+      function createHtml5Video(config) {
+        disposeHtml5Video()
+        html5VideoEl.innerHTML = `
+          <video id="video" controls autoplay muted preload="none" poster="https://media.w3.org/2010/05/sintel/poster.png">
+            <source id="mp4" src="https://media.w3.org/2010/05/sintel/trailer.mp4" type="video/mp4">
+            <source id="webm" src="https://media.w3.org/2010/05/sintel/trailer.webm" type="video/webm">
+            <source id="ogv" src="https://media.w3.org/2010/05/sintel/trailer.ogv" type="video/ogg">
+            <p>Your user agent does not support the HTML5 Video element.</p>
+          </video>
+        `
+        const events = [
+          'play',
+          'pause',
+          'playing',
+          'volumechange',
+          'fullscreenerror',
+          'fullscreenchange',
+          'webkitfullscreenchange', // safari, not available in iOS WebView
+          'webkitbeginfullscreen',  // iOS WebView 
+          'webkitendfullscreen'     // iOS WebView
+        ]
+        for (const type of events) {
+          getHtml5Video().addEventListener(type, logHtml5State)
+        }
+      }
+
+      function disposeHtml5Video() {
+        html5VideoEl.innerHTML = ''
+        html5LogEl.innerHTML = ''
+      }
+
+      function getHtml5Video() {
+        return html5VideoEl.querySelector('video')
+      }
+
+      function getFullscreenElement() {
+        return document.fullscreenElement || document.webkitFullscreenElement || document.webkitCurrentFullScreenElement
+      }
+      function logHtml5State(e) {
+        const video = getHtml5Video()
+        if (!video) {
+          return
+        }
+        const isFullscreen = getFullscreenElement() === video
+        // video.webkitDisplayingFullscreen is only available in iOS WebView and is true
+        // - when video is in native fullscreen
+        // - when video is in PiP mode
+        const isWebViewFullscreen = video.webkitDisplayingFullscreen
+
+        const log = [
+         `Fullsc: ${isFullscreen || isWebViewFullscreen ? 'Y' : 'N'}`,
+         `Mute: ${video.muted ? 'Y' : 'N'}`,
+         `State: ${video.paused ? 'paused' : video.seeking ? 'seeking' : 'playing'}`,
+        ].join(' | ')
+        const el = document.createElement('div')
+        el.textContent = `[${getDateTag()}]: ${log}` 
+        html5LogEl.prepend(el)
       }
     </script>
   </head>
